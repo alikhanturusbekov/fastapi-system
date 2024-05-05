@@ -1,0 +1,40 @@
+version: '3.7'
+
+services:
+  fastapi:
+    container_name: fastapi
+    image: fastapi_image
+    build:
+      context: .
+      dockerfile: Dockerfile
+    ports:
+      - 8000:8000
+
+  postgres:
+    container_name: postgres
+    hostname: postgres
+    image: library/postgres:13
+    environment:
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+      - POSTGRES_DB=test
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    ports:
+      - 5432:5432
+
+  redis:
+    image: redis:6.2
+    container_name: redis
+    hostname: redis
+    ports:
+      - 6379:6379
+    volumes:
+      - redis_data:/data
+    restart: always
+
+volumes:
+  postgres_data:
+    driver: "local"
+  redis_data:
+    driver: "local"
